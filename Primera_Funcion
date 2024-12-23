@@ -1,0 +1,16 @@
+//Parte de Arturo
+int ComprobarComando(char *strcomando, char *orden, char *argumento1, char *argumento2) {
+    char *token = strtok(strcomando, " \n");
+    if (token == NULL) return 1;
+//Genero las condiciones para que se guarden la orden, el argumento1 y el argumento2.
+    strcpy(orden, token);
+    token = strtok(NULL, " \n");
+    if (token != NULL) {
+        strcpy(argumento1, token);
+        token = strtok(NULL, " \n");
+        if (token != NULL) {
+            strcpy(argumento2, token);
+        }
+    }
+    return 0;//Retorno 1 si es valido y cero para cuando no lo sea.
+}		
