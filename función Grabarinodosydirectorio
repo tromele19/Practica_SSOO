@@ -1,0 +1,9 @@
+//Parte de Carla
+La función que he hecho hoy es: 
+void Grabarinodosydirectorio(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, FILE *fich) {
+    fseek(fich, 2 * SIZE_BLOQUE, SEEK_SET);
+    fwrite(inodos, SIZE_BLOQUE, 1, fich);
+    fseek(fich, 3 * SIZE_BLOQUE, SEEK_SET);
+    fwrite(directorio, SIZE_BLOQUE, 1, fich);
+}
+su función es escribir la información de estructuras de datos en un archivo. 
