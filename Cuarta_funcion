@@ -1,0 +1,15 @@
+void Directorio(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos) {
+    printf("El listado de archivos:\n");
+//Genero el bucle para cuando se escriba el comando Dir(Directorio) y se ejecute de manera correcta. 
+   for (int i = 0; i < MAX_FICHEROS; i++) {
+        if (directorio[i].dir_inodo != NULL_INODO && strcmp(directorio[i].dir_nfich, ".") != 0) {
+            EXT_SIMPLE_INODE *inodo = &inodos->blq_inodos[directorio[i].dir_inodo];
+            printf("Archivo: %s, Tamaño: %u bytes, Inodo: %u, Bloques: ", 
+                   directorio[i].dir_nfich, inodo->size_fichero, directorio[i].dir_inodo);
+            for (int j = 0; j < MAX_NUMS_BLOQUE_INODO && inodo->i_nbloque[j] != NULL_BLOQUE; j++) {
+                printf("%u ", inodo->i_nbloque[j]);
+            }
+            printf("\n");
+        }
+    }
+}
