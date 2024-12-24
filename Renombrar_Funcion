@@ -1,0 +1,29 @@
+int Renombrar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, char *nombreantiguo, char *nombrenuevo) {
+    int index_antiguo = -1; 
+
+    // Recorremos el directorio para buscar el archivo con el nombre antiguo y verificar que el nuevo nombre no exista.
+    for (int i = 0; i < MAX_FICHEROS; i++) {
+        // Comprobamos si la entrada del directorio está ocupada.
+        if (directorio[i].dir_inodo != NULL_INODO) {
+            // Verificamos si el nombre coincide con el archivo que queremos renombrar.
+            if (strcmp(directorio[i].dir_nfich, nombreantiguo) == 0) {
+                index_antiguo = i; // Guardamos el índice del archivo encontrado.
+            } 
+            // Verificamos si el nuevo nombre ya existe en el directorio.
+            else if (strcmp(directorio[i].dir_nfich, nombrenuevo) == 0) {
+                printf("Error: El nombre %s ya existe.\n", nombrenuevo);
+                return -1; // Retornamos un error porque el nuevo nombre está en uso.
+            }
+        }
+    }
+
+    // Si no se encontró el archivo con el nombre antiguo, mostramos un error y salimos.
+    if (index_antiguo == -1) {
+        printf("Error: Archivo %s no encontrado.\n", nombreantiguo);
+        return -1;
+    }
+
+    // Realizamos el cambio de nombre del archivo.
+    strcpy(directorio[index_antiguo].dir_nfich, nombrenuevo);
+    return 0; // Retornamos éxito.
+}
