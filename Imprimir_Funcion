@@ -1,0 +1,22 @@
+int Imprimir(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_DATOS *memdatos, char *nombre) {
+    // Busca en el directorio el archivo cuyo nombre coincide con el proporcionado
+    for (int i = 0; i < MAX_FICHEROS; i++) {
+        // Verifica si el archivo existe y si el nombre coincide
+        if (directorio[i].dir_inodo != NULL_INODO && strcmp(directorio[i].dir_nfich, nombre) == 0) {
+            // Obtiene el inodo asociado al archivo encontrado
+            EXT_SIMPLE_INODE *inodo = &inodos->blq_inodos[directorio[i].dir_inodo];
+
+            // Imprime el contenido del archivo bloque por bloque según lo indicado por el inodo
+            printf("Contenido del archivo %s:\n", nombre);
+            for (int j = 0; j < MAX_NUMS_BLOQUE_INODO && inodo->i_nbloque[j] != NULL_BLOQUE; j++) {
+                printf("%s", memdatos[inodo->i_nbloque[j]].dato);
+            }
+            printf("\n");
+            return 0; // el codigo esta bien
+        }
+    }
+
+    // Mensaje de error si no se encontro el archivo
+    printf("Error: Archivo %s no encontrado.\n", nombre);
+    return -1; // Indica que hubo un error
+}
