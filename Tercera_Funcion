@@ -1,0 +1,14 @@
+void Printbytemaps(EXT_BYTE_MAPS *ext_bytemaps) {
+//Imprime el contenido de dos mapas de bits que representan los inodos en un sistema de archivos.
+    printf("Bytemap de bloques (primeros 25):\n");
+    for (int i = 0; i < 25; i++) {
+        printf("%u ", ext_bytemaps->bmap_bloques[i]);
+    }
+    printf("\n");
+
+    printf("Bytemap de inodos:\n");
+    for (int i = 0; i < MAX_INODOS; i++) {
+        printf("%u ", ext_bytemaps->bmap_inodos[i]);
+    }
+    printf("\n");
+}
