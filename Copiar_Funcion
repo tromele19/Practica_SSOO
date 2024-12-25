@@ -1,0 +1,61 @@
+//Parte Diego
+int Copiar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *bytemaps,
+           EXT_SIMPLE_SUPERBLOCK *ext_superblock, EXT_DATOS *memdatos, char *origen, char *destino, FILE *fich) {
+    // verifico la existencia del archivo origen y destino
+    int inodo_origen = -1, inodo_destino = -1;
+    for (int i = 0; i < MAX_FICHEROS; i++) {
+        if (directorio[i].dir_inodo != NULL_INODO && strcmp(directorio[i].dir_nfich, origen) == 0) {
+            inodo_origen = directorio[i].dir_inodo;
+        }
+        if (directorio[i].dir_inodo != NULL_INODO && strcmp(directorio[i].dir_nfich, destino) == 0) {
+            printf("Error: El nombre %s ya existe.\n", destino);
+            return -1;
+        }
+    }
+    if (inodo_origen == -1) {
+        printf("Error: Archivo %s no encontrado.\n", origen);
+        return -1;
+    }
+
+    // Aquí se busca un inodo libre
+    for (int i = 0; i < MAX_INODOS; i++) {
+        if (bytemaps->bmap_inodos[i] == 0) {
+            inodo_destino = i;
+            break;
+        }
+    }
+    if (inodo_destino == -1) {
+        printf("Error: No hay inodos libres.\n");
+        return -1;
+    }
+
+    // Se copia un archivo a otro
+    EXT_SIMPLE_INODE *origen_inodo = &inodos->blq_inodos[inodo_origen];
+    EXT_SIMPLE_INODE *destino_inodo = &inodos->blq_inodos[inodo_destino];
+    destino_inodo->size_fichero = origen_inodo->size_fichero;
+    for (int i = 0; i < MAX_NUMS_BLOQUE_INODO && origen_inodo->i_nbloque[i] != NULL_BLOQUE; i++) {
+        for (int j = PRIM_BLOQUE_DATOS; j < MAX_BLOQUES_PARTICION; j++) {
+            if (bytemaps->bmap_bloques[j] == 0) {
+                bytemaps->bmap_bloques[j] = 1;
+                destino_inodo->i_nbloque[i] = j;
+                memcpy(memdatos[j].dato, memdatos[origen_inodo->i_nbloque[i]].dato, SIZE_BLOQUE);
+                break;
+            }
+        }
+    }
+
+    // Se actualiza las estructuras del sistema de archivos
+    bytemaps->bmap_inodos[inodo_destino] = 1;
+    for (int i = 0; i < MAX_FICHEROS; i++) {
+        if (directorio[i].dir_inodo == NULL_INODO) {
+            strcpy(directorio[i].dir_nfich, destino);
+            directorio[i].dir_inodo = inodo_destino;
+            break;
+        }
+    }
+
+    // Actualizo el superbloque
+    ext_superblock->s_free_inodes_count--;
+    ext_superblock->s_free_blocks_count--;
+    return 0;
+}
