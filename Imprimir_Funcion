@@ -1,3 +1,4 @@
+//parte Diego
 int Imprimir(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_DATOS *memdatos, char *nombre) {
     // Busca en el directorio el archivo cuyo nombre coincide con el proporcionado
     for (int i = 0; i < MAX_FICHEROS; i++) {
