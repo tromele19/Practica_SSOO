@@ -1,0 +1,32 @@
+//Parte Diego
+
+int Borrar(EXT_ENTRADA_DIR *directorio, EXT_BLQ_INODOS *inodos, EXT_BYTE_MAPS *bytemaps,
+           EXT_SIMPLE_SUPERBLOCK *ext_superblock, char *nombre, FILE *fich) {
+// Hago la busqueda del archivo
+    for (int i = 0; i < MAX_FICHEROS; i++) {
+        if (directorio[i].dir_inodo != NULL_INODO && strcmp(directorio[i].dir_nfich, nombre) == 0) {
+            EXT_SIMPLE_INODE *inodo = &inodos->blq_inodos[directorio[i].dir_inodo];
+
+            // Libero los bloques ociupados
+            for (int j = 0; j < MAX_NUMS_BLOQUE_INODO && inodo->i_nbloque[j] != NULL_BLOQUE; j++) {
+                bytemaps->bmap_bloques[inodo->i_nbloque[j]] = 0;
+                inodo->i_nbloque[j] = NULL_BLOQUE;
+            }
+
+            // Reseteo el inodo y la entrada del directorio
+            inodo->size_fichero = 0;
+            bytemaps->bmap_inodos[directorio[i].dir_inodo] = 0;
+            directorio[i].dir_inodo = NULL_INODO;
+            strcpy(directorio[i].dir_nfich, "");
+
+            //  Actualizo los parametros superblock
+            ext_superblock->s_free_inodes_count++;
+            ext_superblock->s_free_blocks_count++;
+            return 0;
+        }
+    }
+
+    //  Si el archivo no se encuentra me da un aviso de error
+    printf("Error: Archivo %s no encontrado.\n", nombre);
+    return -1;
+}
