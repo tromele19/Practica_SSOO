@@ -1,0 +1,7 @@
+//Parte Carla
+La función que hice hoy es la siguiente:
+void GrabarByteMaps(EXT_BYTE_MAPS *ext_bytemaps, FILE *fich) {
+    fseek(fich, SIZE_BLOQUE, SEEK_SET);
+    fwrite(ext_bytemaps, SIZE_BLOQUE, 1, fich);
+}
+Lo que hace esta función es escribir una estructura de datos llamada "ext_byte_maps" en un archivo, y posiciona primero el puntero del archivo en un lugar especifico antes.
