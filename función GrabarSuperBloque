@@ -1,0 +1,7 @@
+//Parte Carla
+Hoy también me ha dado tiempo a hacer esta otra función:
+void GrabarSuperBloque(EXT_SIMPLE_SUPERBLOCK *ext_superblock, FILE *fich) {
+    fseek(fich, 0, SEEK_SET);
+    fwrite(ext_superblock, SIZE_BLOQUE, 1, fich);
+}
+Donde escribe la estructura "ext_simple_superblock" en el primer bloque del archivo. He utilizado el bloque principal "superbloque" ya que investigué y sirve para contener la metadata general del sistema de archivos.
