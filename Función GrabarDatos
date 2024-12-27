@@ -1,0 +1,7 @@
+//Parte Carla
+La función que hice hoy es la siguiente:
+void GrabarDatos(EXT_DATOS *memdatos, FILE *fich) {
+    fseek(fich, PRIM_BLOQUE_DATOS * SIZE_BLOQUE, SEEK_SET);
+    fwrite(memdatos, SIZE_BLOQUE, MAX_BLOQUES_DATOS, fich);
+}
+Su proposito es escribir datos almacenados en memoria en un archivo en linux. He utilizado los parámetros "ext_datos *memdatos" que es un puntero a una estructura de memoria que contiene los datos que se van a escribir en el archivo.
